@@ -40,26 +40,38 @@ public class MainActivity extends AppCompatActivity {
         call.enqueue(new Callback<List<Book>>() {
             @Override
             public void onResponse(Call<List<Book>> call, Response<List<Book>> response) {
-                List<Book> bookList = response.body();
 
-                ArrayList<Book> books = new ArrayList<Book>();
-                Log.i("arraySize", Integer.toString(bookList.size()));
+                try {
+                    if(response.body() != null) {
+                        List<Book> bookList = response.body();
 
-                for (int i = 0; i < bookList.size(); i++) {
-                    int id = bookList.get(i).getId();
-                    Log.i("idxx", Integer.toString(id));
-                    String title = bookList.get(i).getTitle();
-                    String isbn = bookList.get(i).getIsbn();
-                    int price = bookList.get(i).getPrice();
-                    String currencyCode = bookList.get(i).getCurrencyCode();
-                    String author = bookList.get(i).getAuthor();
+                        ArrayList<Book> books = new ArrayList<Book>();
+                        Log.i("arraySize", Integer.toString(bookList.size()));
 
-                    books.add(new Book(id, title, isbn, price, currencyCode, author));
+                        for (int i = 0; i < bookList.size(); i++) {
+                            int id = bookList.get(i).getId();
+                            Log.i("idxx", Integer.toString(id));
+                            String title = bookList.get(i).getTitle();
+                            String isbn = bookList.get(i).getIsbn();
+                            int price = bookList.get(i).getPrice();
+                            String currencyCode = bookList.get(i).getCurrencyCode();
+                            String author = bookList.get(i).getAuthor();
+
+                            books.add(new Book(id, title, isbn, price, currencyCode, author));
+                        }
+
+
+                        RecyclerView myrv = (RecyclerView) findViewById(R.id.recyclerView_id);
+                        RecyclerViewAdapter myAdapter = new RecyclerViewAdapter(getApplicationContext(), books);
+                        myrv.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
+                        myrv.setAdapter(myAdapter);
+                    }else{
+                        Toast.makeText(getApplicationContext(), "Error loading book list, Please try again later", Toast.LENGTH_SHORT).show();
+                    }
+
+                }catch (Exception e){
+                    e.printStackTrace();
                 }
-                RecyclerView myrv = (RecyclerView) findViewById(R.id.recyclerView_id);
-                RecyclerViewAdapter myAdapter = new RecyclerViewAdapter(getApplicationContext(),books);
-                myrv.setLayoutManager(new GridLayoutManager(getApplicationContext(),2));
-                myrv.setAdapter(myAdapter);
 
             }
 

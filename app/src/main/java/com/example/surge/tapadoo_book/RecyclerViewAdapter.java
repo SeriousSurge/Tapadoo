@@ -41,6 +41,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public void onBindViewHolder(MyViewHolder holder, final int position) {
 
         holder.tv_book_title.setText(mData.get(position).getTitle());
+        holder.tv_book_price.setText(mData.get(position).getPriceString());
         Picasso.get().load(mData.get(position).getCoverImg()).into(holder.img_book_cover);
 
         //Attaches a listener to the cardviews and sends the data through to the BookActivity. Also handles some formatting.
@@ -50,21 +51,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                 Intent intent = new Intent(mContext,BookActivity.class);
 
-                //Formats the currency from the price int and ISO CurrencyCode
-                NumberFormat nf = NumberFormat.getCurrencyInstance();
-                String currencyCode = mData.get(position).getCurrencyCode();
-                nf.setCurrency(Currency.getInstance(currencyCode));
-                double currencyAmmount = mData.get(position).getPrice();
-                currencyAmmount = currencyAmmount/100;
-                String bookPrice= nf.format(currencyAmmount);
-
                 // passing data to the book activity
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                intent.putExtra("Title",mData.get(position).getTitle());
-                intent.putExtra("Img",mData.get(position).getCoverImg());
-                intent.putExtra("Author",mData.get(position).getAuthor());
-                intent.putExtra("Price",bookPrice);
-                intent.putExtra("ISBN",mData.get(position).getIsbn());
+                  intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                  intent.putExtra("id",mData.get(position).getId());
+
                 // start the activity
                 mContext.startActivity(intent);
 
@@ -85,6 +75,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public static class MyViewHolder extends RecyclerView.ViewHolder {
 
         TextView tv_book_title;
+        TextView tv_book_price;
         ImageView img_book_cover;
         CardView cardView ;
 
@@ -92,6 +83,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             super(itemView);
 
             tv_book_title = (TextView) itemView.findViewById(R.id.book_title_id) ;
+            tv_book_price = (TextView) itemView.findViewById(R.id.book_price_id) ;
             img_book_cover = (ImageView) itemView.findViewById(R.id.book_img_id);
             cardView = (CardView) itemView.findViewById(R.id.cardview_id);
 
